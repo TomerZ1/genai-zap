@@ -1,0 +1,16 @@
+# Environment — never commit your API key
+.env
+
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+
+# Generated outputs — too noisy for git
+outputs/
+
+# CRM log — runtime data, not source code
+crm_log.json
+
+# macOS
+.DS_Store
