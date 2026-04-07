@@ -1,6 +1,13 @@
+# Backend dependencies
 fastapi==0.115.12
 uvicorn==0.34.0
+
+# Scraping
 requests==2.32.3
 beautifulsoup4==4.13.4
+
+# AI
 anthropic==0.51.0
+
+# Environment
 python-dotenv==1.1.0

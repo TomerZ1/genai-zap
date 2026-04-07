@@ -14,3 +14,9 @@ crm_log.json
 
 # macOS
 .DS_Store
+
+# Project planning and meta files
+BRIEF.md
+PLAN.md
+CLAUDE.md
+.claude/
