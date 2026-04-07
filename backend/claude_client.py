@@ -11,7 +11,8 @@ load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
 # Model used for all calls
-MODEL = "claude-sonnet-4-6"
+MODEL_RESEARCH = "claude-sonnet-4-6"      # smarter model for web search — worth the cost
+MODEL_GENERATION = "claude-haiku-4-5-20251001"  # cheaper model for card and script generation
 
 def _load_prompt(filename: str, **kwargs) -> str:
     """
@@ -45,7 +46,7 @@ def research_business(business_name: str, owner_name: str, phone: str, area: str
     # web_search_20250305 is a server-side tool — Anthropic executes the searches
     # automatically within the same API call. No loop needed; we always get end_turn.
     response = client.messages.create(
-        model=MODEL,
+        model=MODEL_RESEARCH,
         max_tokens=4096,
         tools=[{
             "type": "web_search_20250305",
@@ -61,7 +62,7 @@ def research_business(business_name: str, owner_name: str, phone: str, area: str
     )
 
     # Claude sometimes adds explanation before/after the JSON — extract just the JSON object
-    match = re.search(r"\{.*\}", final_text, re.DOTALL)
+    match = re.search(r"\{.*\}", final_text, re.DOTALL) # find the first JSON object in the text. This is the actual response.
     if not match:
         # Fallback: build a minimal profile from the raw inputs if Claude didn't return JSON
         print(f"[claude] no JSON in response, using fallback profile. Response: {final_text[:100]}")
@@ -85,7 +86,7 @@ def generate_client_card(profile: dict) -> str:
     )
 
     response = client.messages.create(
-        model=MODEL,
+        model=MODEL_GENERATION,
         max_tokens=2048,
         messages=[{"role": "user", "content": prompt}],
     )
@@ -103,7 +104,7 @@ def generate_onboarding_script(profile: dict) -> str:
     )
 
     response = client.messages.create(
-        model=MODEL,
+        model=MODEL_GENERATION,
         max_tokens=1024,
         messages=[{"role": "user", "content": prompt}],
     )

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>זאפ — אונבורדינג לקוח</title>
+  <!-- marked.js renders markdown to HTML so the AI output displays properly -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -77,7 +79,7 @@
       padding: 24px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       margin-bottom: 20px;
-      white-space: pre-wrap; /* preserve line breaks from the AI output */
+      line-height: 1.7;
     }
 
     .result-block h2 {
@@ -167,9 +169,9 @@
 
         const result = await response.json();
 
-        // Display the results — will be populated once Parts 5-7 are built
-        document.getElementById("client-card").textContent = result.client_card ?? JSON.stringify(result, null, 2);
-        document.getElementById("onboarding-script").textContent = result.onboarding_script ?? "";
+        // Render markdown to HTML so headers, bold, and lists display properly
+        document.getElementById("client-card").innerHTML = marked.parse(result.client_card ?? "");
+        document.getElementById("onboarding-script").innerHTML = marked.parse(result.onboarding_script ?? "");
         document.getElementById("results").style.display = "block";
 
       } catch (err) {
