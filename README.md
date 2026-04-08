@@ -57,8 +57,7 @@
 
   ![pic 1](assets/pic%201.png)
 
-  ![pic 2](assets/pic%202.png) 2. לאחר הפעלת הכלי, יתבצע מחקר באינטרנט אודות בית העסק. אם הייתי ממלא גם קישור לאתר ישן, הייתה מתבצעת סריקה של האתר **ללא** כלי AI (Scraping) והתוצאות היו עוברות לכלי המחקר (ה- AI) בתור context. הסריקה הראשונית יעילה באמצעות ספריית BeautifulSoup שסורקת את קוד המקור של האתר, מנקה את הדאטה ומחזירה פלט מסודר. השימוש ב- AI בשלב הסריקה הראשונית מיותר בגלל ש- BeautifulSoup הוא כלי מוכח וחינמי.
-  3. הכלי פונה דרך API KEY לקלוד עם פרומפטים מוכנים מראש (ניתן למצוא אותם בתיקיה המתאימה) שמגדירים לו איך לחקור את הרשת, מה לחפש ואיך לבנות כרטיס לקוח + תסריט שיחה + JSON מתאים ל- CRM. על מנת לאזן בין יעילות למחיר, בחרתי להשתמש ב- Claude Sonnet 4.6 לחיפוש ברשת (שכן לאחר בדיקה המודלים החלשים יותר לא נותנים תוצאות מספקות), וב- Claude Haiku 4.5 לכתיבת הטקסט שכן זו משימה די פשוטה למודל שפה ואין צורך לשלם פי כמה על מודל חזק יותר. אציין שכתיבת הפרומפטים ודיוקם הייתה באמצעות Claude ושם יש טמפלייטים מפורטים של הפלט המצופה, ודגשים חשובים שיחסכו לעובדי זאפ עבודה (למשל, בדוגמה למטה ניתן לראות כי בעת מחקר ברשת התגלו בשני מקומות שונים מספרי טלפון שונים, ולכן יש דגש על בדיקה של העניין מול הלקוח).
+  ![pic 2](assets/pic%202.png) 2. לאחר הפעלת הכלי, יתבצע מחקר באינטרנט אודות בית העסק. אם הייתי ממלא גם קישור לאתר ישן, הייתה מתבצעת סריקה של האתר **ללא** כלי AI (Scraping) והתוצאות היו עוברות לכלי המחקר (ה- AI) בתור context. הסריקה הראשונית יעילה באמצעות ספריית BeautifulSoup שסורקת את קוד המקור של האתר, מנקה את הדאטה ומחזירה פלט מסודר. השימוש ב- AI בשלב הסריקה הראשונית מיותר בגלל ש- BeautifulSoup הוא כלי מוכח וחינמי. 3. הכלי פונה דרך API KEY לקלוד עם פרומפטים מוכנים מראש (ניתן למצוא אותם בתיקיה המתאימה) שמגדירים לו איך לחקור את הרשת, מה לחפש ואיך לבנות כרטיס לקוח + תסריט שיחה + JSON מתאים ל- CRM. על מנת לאזן בין יעילות למחיר, בחרתי להשתמש ב- Claude Sonnet 4.6 לחיפוש ברשת (שכן לאחר בדיקה המודלים החלשים יותר לא נותנים תוצאות מספקות), וב- Claude Haiku 4.5 לכתיבת הטקסט שכן זו משימה די פשוטה למודל שפה ואין צורך לשלם פי כמה על מודל חזק יותר. אציין שכתיבת הפרומפטים ודיוקם הייתה באמצעות Claude ושם יש טמפלייטים מפורטים של הפלט המצופה, ודגשים חשובים שיחסכו לעובדי זאפ עבודה (למשל, בדוגמה למטה ניתן לראות כי בעת מחקר ברשת התגלו בשני מקומות שונים מספרי טלפון שונים, ולכן יש דגש על בדיקה של העניין מול הלקוח).
 
   ![pic 3](assets/pic%203.png)
 
@@ -73,3 +72,113 @@
   ![pic 7](assets/pic%207.png)
 
 </div>
+
+<div>
+## Part B — Setup & Run Guide
+
+### Prerequisites
+
+- Python 3.10+
+- An [Anthropic API key](https://console.anthropic.com/)
+
+---
+
+### Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/TomerZ1/genai-zap.git
+cd genai-zap
+
+# Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate  # on Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+---
+
+### Environment Setup
+
+Create a `.env` file in the project root (use `.env.example` as a reference):
+
+```bash
+cp .env.example .env
+```
+
+Then open `.env` and add your Anthropic API key:
+
+```
+ANTHROPIC_API_KEY=your_api_key_here
+```
+
+---
+
+### Running the App
+
+**1. Start the backend:**
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+**2. Serve the frontend** (in a separate terminal):
+
+```bash
+cd frontend
+python3 -m http.server 3000
+```
+
+**3. Open the UI:**  
+Go to [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+### Usage
+
+Fill in the client form:
+
+- **שם העסק** — Business name
+- **שם בעל העסק** — Owner name
+- **טלפון** — Phone number
+- **אזור פעילות** — Service area
+- **קישור** _(optional)_ — Existing website or Dapei Zahav minisite URL
+
+Click **הפעל אונבורדינג** and wait ~30 seconds for the AI to research and generate the outputs.
+
+---
+
+### Output
+
+Each run produces:
+
+- A **client card** (Hebrew) displayed in the UI — for the Zap account manager
+- An **onboarding script** (Hebrew) displayed in the UI — ready to send to the client
+- A timestamped **markdown file** saved to `/outputs`
+- A record appended to **`crm_log.json`** (simulated CRM log)
+
+---
+
+### Project Structure
+
+```
+genai-zap/
+├── backend/
+│   ├── main.py           # FastAPI app + pipeline orchestration
+│   ├── scraper.py        # URL scraping with BeautifulSoup
+│   ├── claude_client.py  # All Claude API calls
+│   ├── crm.py            # CRM logging to JSON
+│   └── prompts/
+│       ├── research.md   # Prompt: web research phase
+│       ├── client_card.md  # Prompt: Hebrew client card
+│       └── onboarding.md   # Prompt: Hebrew onboarding message
+├── frontend/
+│   └── index.html        # Single-page UI
+├── outputs/              # Generated markdown files (gitignored)
+├── .env.example          # Environment variable template
+└── requirements.txt      # Python dependencies
+```
+
+<div/>
